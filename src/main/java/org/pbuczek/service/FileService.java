@@ -13,6 +13,7 @@ import java.util.List;
 
 public class FileService {
     private DataService dataService = new DataService(new ObjectMapper());
+    public static final String JSON_PLACEHOLDER_POSTS_URL_ADDRESS = "https://jsonplaceholder.typicode.com/posts";
 
     public void setDataService(DataService dataService) {
         this.dataService = dataService;
@@ -31,7 +32,7 @@ public class FileService {
     public String downloadPostsToJsonFiles() {
         String folderPath = "";
         try {
-            String jsonPosts = dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts");
+            String jsonPosts = dataService.getJsonFromUrlAddress(JSON_PLACEHOLDER_POSTS_URL_ADDRESS);
             List<Post> posts = dataService.mapJsonToPosts(jsonPosts);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
