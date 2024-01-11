@@ -12,12 +12,13 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        DataService dataService = new DataService(new ObjectMapper());
+        FileService fileService = new FileService();
+
         try {
-            DataService dataService = new DataService(new ObjectMapper());
             String jsonPosts = dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts");
             List<Post> posts = dataService.mapJsonToPosts(jsonPosts);
 
-            FileService fileService = new FileService();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
             String folderPath = "results/posts_" + formatter.format(java.time.LocalDateTime.now());
             fileService.createDirectory(folderPath);
