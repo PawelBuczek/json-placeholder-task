@@ -117,6 +117,23 @@ class FileServiceTest {
                 "com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field \"wrong\""));
     }
 
+    @Test
+    void shouldPrintStackTraceWhenIdIsDuplicated() {
+        // given
+        FileService fileService = new FileService();
+        mockGetJsonFromUrlAddressMethod(fileService,
+                "[{\"userId\": 1, \"id\": 1, \"title\": \"Test Title1\", \"body\": \"Test Body\"}," +
+                        "{\"userId\": 1, \"id\": 2, \"title\": \"Test Title2\", \"body\": \"Test Body\"}," +
+                        "{\"userId\": 2, \"id\": 1, \"title\": \"Test Title3\", \"body\": \"Test Body\"}]");
+
+        // when
+        folderPath = fileService.downloadPostsToJsonFiles();
+
+        // then
+        assert (errContent.toString().contains(
+                "DuplicateIdException: Returned jsonObject contains duplicated post ids"));
+    }
+
     @SneakyThrows
     private void assertPostFileIsCorrect(String filePath, String expectedFileContents) {
         File file = new File(filePath);
