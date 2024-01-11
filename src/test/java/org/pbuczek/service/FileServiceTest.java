@@ -1,13 +1,13 @@
 package org.pbuczek.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,12 +17,13 @@ class FileServiceTest {
     private static String folderPath = "";
 
     @AfterEach
-    void tearDown() throws IOException {
+    @SneakyThrows
+    void tearDown() {
         FileUtils.deleteDirectory(new File(folderPath));
     }
 
     @Test
-    void shouldSaveJsonFileWhenGivenOnePost() throws IOException {
+    void shouldSaveJsonFileWhenGivenOnePost() {
         // given
         String expectedFileContents = "{\"userId\":1,\"id\":1,\"title\":\"Test Title\",\"body\":\"Test Body\"}";
         FileService fileService = new FileService();
@@ -33,13 +34,11 @@ class FileServiceTest {
         folderPath = fileService.downloadPostsToJsonFiles();
 
         // then
-        File file = new File(folderPath + "/1.json");
-        assertTrue(file.exists());
-        assertEquals(expectedFileContents, FileUtils.readFileToString(file, "utf-8"));
+        assertPostFileIsCorrect(folderPath + "/1.json", expectedFileContents);
     }
 
     @Test
-    void shouldSaveThreeJsonFilesWhenGivenThreePosts() throws IOException {
+    void shouldSaveThreeJsonFilesWhenGivenThreePosts() {
         // given
         String expectedFileOneContents = "{\"userId\":1,\"id\":1,\"title\":\"Test Title1\",\"body\":\"Test Body\"}";
         String expectedFileTwoContents = "{\"userId\":1,\"id\":2,\"title\":\"Test Title2\",\"body\":\"Test Body\"}";
@@ -59,13 +58,15 @@ class FileServiceTest {
         assertPostFileIsCorrect(folderPath + "/3.json", expectedFileThreeContents);
     }
 
-    private void assertPostFileIsCorrect(String filePath, String expectedFileContents) throws IOException {
+    @SneakyThrows
+    private void assertPostFileIsCorrect(String filePath, String expectedFileContents) {
         File file = new File(filePath);
         assertTrue(file.exists());
         assertEquals(expectedFileContents, FileUtils.readFileToString(file, "utf-8"));
     }
 
-    private void mockGetJsonFromUrlAddressMethod(FileService fileService, String mockedJsonResponse) throws IOException {
+    @SneakyThrows
+    private void mockGetJsonFromUrlAddressMethod(FileService fileService, String mockedJsonResponse) {
         DataService dataService = Mockito.spy(new DataService(new ObjectMapper()));
         when(dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts"))
                 .thenReturn(mockedJsonResponse);
