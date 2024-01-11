@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 class FileServiceTest {
 
     @Test
-    void downloadPostsToJsonFilesSimpleTest() throws IOException {
+    void shouldSaveJsonFileWhenGivenOnePost() throws IOException {
         // given
         String expectedFileContents = "{\"userId\":1,\"id\":1,\"title\":\"Test Title\",\"body\":\"Test Body\"}";
         String mockedJsonResponse = "[{\"userId\": 1, \"id\": 1, \"title\": \"Test Title\", \"body\": \"Test Body\"}]";
