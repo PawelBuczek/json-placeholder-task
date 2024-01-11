@@ -89,7 +89,7 @@ class FileServiceTest {
     }
 
     @Test
-    void shouldPrintStackTraceWhenResponseIsNull() {
+    void shouldThrowExceptionWhenResponseIsNull() {
         // given
         FileService fileService = new FileService();
         mockGetJsonFromUrlAddressMethod(fileService,
@@ -100,6 +100,21 @@ class FileServiceTest {
 
         // then
         assert(exception.getMessage().contains("argument \"content\" is null"));
+    }
+
+    @Test
+    void shouldPrintStackTraceWhenResponseHasWrongStructure() {
+        // given
+        FileService fileService = new FileService();
+        mockGetJsonFromUrlAddressMethod(fileService,
+                "[{\"wrong\": 1, \"id\": 1, \"title\": \"Test Title\", \"body\": \"Test Body\"}]");
+
+        // when
+        folderPath = fileService.downloadPostsToJsonFiles();
+
+        // then
+        assert (errContent.toString().contains(
+                "com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field \"wrong\""));
     }
 
     @SneakyThrows
