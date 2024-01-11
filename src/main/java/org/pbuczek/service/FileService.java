@@ -28,18 +28,21 @@ public class FileService {
         }
     }
 
-    public static void downloadPostsToJsonFiles() {
+    public static String downloadPostsToJsonFiles() {
+        String folderPath = "";
         try {
             String jsonPosts = dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts");
             List<Post> posts = dataService.mapJsonToPosts(jsonPosts);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
-            String folderPath = "results/posts_" + formatter.format(java.time.LocalDateTime.now());
+            folderPath = "results/posts_" + formatter.format(java.time.LocalDateTime.now());
             createDirectory(folderPath);
 
             dataService.savePostsToFiles(posts, folderPath);
         } catch (DuplicateIdException | IOException e) {
             e.printStackTrace();
         }
+
+        return folderPath;
     }
 }

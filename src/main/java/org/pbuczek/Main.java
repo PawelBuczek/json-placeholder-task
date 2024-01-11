@@ -4,6 +4,6 @@ import org.pbuczek.service.FileService;
 
 public class Main {
     public static void main(String[] args) {
-        FileService.downloadPostsToJsonFiles();
+        System.out.println(FileService.downloadPostsToJsonFiles());
     }
 }
