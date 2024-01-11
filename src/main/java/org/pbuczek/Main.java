@@ -17,15 +17,13 @@ public class Main {
             String jsonPosts = dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts");
             ObjectMapper mapper = new ObjectMapper();
             List<Post> posts = dataService.mapJsonToPosts(mapper, jsonPosts);
-            System.out.println(posts);
 
             FileService fileService = new FileService();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
             String folderPath = "results/posts_" + formatter.format(java.time.LocalDateTime.now());
             fileService.createDirectory(folderPath);
 
-            //need to save files in the directory
-
+            dataService.savePostsToFiles(posts, mapper, folderPath);
         } catch (DuplicateIdException | IOException e) {
             e.printStackTrace();
         }

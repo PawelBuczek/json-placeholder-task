@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,5 +38,12 @@ public class DataService {
         }
 
         return posts;
+    }
+
+    public void savePostsToFiles(List<Post> posts, ObjectMapper mapper, String folderPath) throws IOException {
+        for (final Post post : posts) {
+            Path filePath = Paths.get(folderPath, post.getId() + ".json");
+            mapper.writeValue(filePath.toFile(), post);
+        }
     }
 }
