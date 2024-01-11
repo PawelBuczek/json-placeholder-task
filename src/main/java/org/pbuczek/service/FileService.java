@@ -40,6 +40,7 @@ public class FileService {
 
             dataService.savePostsToFiles(posts, folderPath);
         } catch (DuplicateIdException | IOException e) {
+            //probably would be better to log with @SLF4J or something
             e.printStackTrace();
         }
 
