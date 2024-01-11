@@ -12,7 +12,7 @@ public class FileService {
             Files.createDirectories(path);
 
         } catch (IOException e) {
-            throw new IOException("Failed to create directory:" + folderPath  + e.getMessage());
+            throw new IOException("Failed to create directory:" + folderPath + e.getMessage());
         }
     }
 }
