@@ -3,6 +3,7 @@ package org.pbuczek.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.pbuczek.exception.DuplicateIdException;
 import org.pbuczek.post.Post;
@@ -17,7 +18,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 public class DataService {
+    private ObjectMapper mapper;
+
     @SuppressWarnings("SameParameterValue")
     public String getJsonFromUrlAddress(String urlAddress) throws IOException {
         try (InputStream inputStream = new URL(urlAddress).openStream()) {
@@ -25,7 +29,7 @@ public class DataService {
         }
     }
 
-    public List<Post> mapJsonToPosts(ObjectMapper mapper, String jsonPosts) throws DuplicateIdException, JsonProcessingException {
+    public List<Post> mapJsonToPosts(String jsonPosts) throws DuplicateIdException, JsonProcessingException {
         List<Post> posts = mapper.readValue(jsonPosts, new TypeReference<>() {
         });
 
@@ -40,7 +44,7 @@ public class DataService {
         return posts;
     }
 
-    public void savePostsToFiles(List<Post> posts, ObjectMapper mapper, String folderPath) throws IOException {
+    public void savePostsToFiles(List<Post> posts, String folderPath) throws IOException {
         for (final Post post : posts) {
             Path filePath = Paths.get(folderPath, post.getId() + ".json");
             mapper.writeValue(filePath.toFile(), post);
