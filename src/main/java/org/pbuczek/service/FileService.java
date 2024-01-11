@@ -12,13 +12,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FileService {
-    public static DataService dataService = new DataService(new ObjectMapper());
+    private DataService dataService = new DataService(new ObjectMapper());
 
-    public static void setDataService(DataService dataService) {
-        FileService.dataService = dataService;
+    public void setDataService(DataService dataService) {
+        this.dataService = dataService;
     }
 
-    public static void createDirectory(String folderPath) throws IOException {
+    public void createDirectory(String folderPath) throws IOException {
         try {
             Path path = Paths.get(folderPath);
             Files.createDirectories(path);
@@ -28,7 +28,7 @@ public class FileService {
         }
     }
 
-    public static String downloadPostsToJsonFiles() {
+    public String downloadPostsToJsonFiles() {
         String folderPath = "";
         try {
             String jsonPosts = dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts");

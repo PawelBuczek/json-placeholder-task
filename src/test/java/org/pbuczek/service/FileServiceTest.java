@@ -22,10 +22,11 @@ class FileServiceTest {
         DataService dataService = Mockito.spy(new DataService(new ObjectMapper()));
         when(dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts"))
                 .thenReturn(mockedJsonResponse);
-        FileService.setDataService(dataService);
+        FileService fileService = new FileService();
+        fileService.setDataService(dataService);
 
         // when
-        String folderPath = FileService.downloadPostsToJsonFiles();
+        String folderPath = fileService.downloadPostsToJsonFiles();
 
         // then
         File file = new File(folderPath + "/1.json");
