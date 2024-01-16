@@ -99,7 +99,7 @@ class FileServiceTest {
         Exception exception = assertThrows(IllegalArgumentException.class, fileService::downloadPostsToJsonFiles);
 
         // then
-        assert(exception.getMessage().contains("argument \"content\" is null"));
+        assert (exception.getMessage().contains("argument \"content\" is null"));
     }
 
     @Test
@@ -144,7 +144,7 @@ class FileServiceTest {
     @SneakyThrows
     private void mockGetJsonFromUrlAddressMethod(FileService fileService, String mockedJsonResponse) {
         DataService dataService = Mockito.spy(new DataService(new ObjectMapper()));
-        when(dataService.getJsonFromUrlAddress("https://jsonplaceholder.typicode.com/posts"))
+        when(dataService.getJsonFromUrlAddress(FileService.JSON_PLACEHOLDER_POSTS_URL_ADDRESS))
                 .thenReturn(mockedJsonResponse);
         fileService.setDataService(dataService);
     }
