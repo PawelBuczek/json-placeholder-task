@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -33,28 +34,23 @@ public class FileService {
     }
 
     public String downloadPostsToJsonFiles() {
-        String folderPath = "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
+        String folderPath = "results/posts_" + formatter.format(LocalDateTime.now());
+
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM(MMM)_dd_HH_mm_ss");
-            folderPath = "results/posts_" + formatter.format(java.time.LocalDateTime.now());
             createDirectory(folderPath);
             String jsonPosts = dataService.getJsonFromUrlAddress(JSON_PLACEHOLDER_POSTS_URL_ADDRESS);
             List<Post> posts = dataService.mapJsonToPosts(jsonPosts);
             Map<Integer, List<Post>> postsByUser = posts.stream()
                     .collect(Collectors.groupingBy(Post::getUserId));
 
-            String finalFolderPath = folderPath;
-            postsByUser
-                    .forEach((userId, userPosts) -> {
-                        try {
-                            dataService.savePostsToFiles(userPosts.stream().limit(MAX_NUMBER_OF_POSTS_PER_USER).toList(),
-                                    userId, finalFolderPath);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            for (Map.Entry<Integer, List<Post>> entry : postsByUser.entrySet()) {
+                int userId = entry.getKey();
+                List<Post> limitedUserPosts = entry.getValue().stream().limit(MAX_NUMBER_OF_POSTS_PER_USER).toList();
+                dataService.savePostsToFiles(limitedUserPosts, userId, folderPath);
+            }
+
         } catch (DuplicateIdException | IOException e) {
-            //probably would be better to log with @SLF4J or something
             e.printStackTrace();
         }
         return folderPath;
