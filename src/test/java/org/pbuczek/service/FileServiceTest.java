@@ -48,8 +48,14 @@ class FileServiceTest {
         folderPath = fileService.downloadPostsToJsonFiles();
 
         // then
-        String expectedFileContents = "{\"userId\":1,\"id\":1,\"title\":\"Test Title\",\"body\":\"Test Body\"}";
-        assertPostFileIsCorrect(folderPath + "/1.json", expectedFileContents);
+        String expectedFileContents = """
+                [ {
+                  "userId" : 1,
+                  "id" : 1,
+                  "title" : "Test Title",
+                  "body" : "Test Body"
+                } ]""";
+        assertPostFileIsCorrect(folderPath + "/user_1.json", expectedFileContents);
     }
 
     @Test
@@ -65,12 +71,27 @@ class FileServiceTest {
         folderPath = fileService.downloadPostsToJsonFiles();
 
         // then
-        String expectedFileOneContents = "{\"userId\":1,\"id\":1,\"title\":\"Test Title1\",\"body\":\"Test Body\"}";
-        String expectedFileTwoContents = "{\"userId\":1,\"id\":2,\"title\":\"Test Title2\",\"body\":\"Test Body\"}";
-        String expectedFileThreeContents = "{\"userId\":2,\"id\":3,\"title\":\"Test Title3\",\"body\":\"Test Body\"}";
-        assertPostFileIsCorrect(folderPath + "/1.json", expectedFileOneContents);
-        assertPostFileIsCorrect(folderPath + "/2.json", expectedFileTwoContents);
-        assertPostFileIsCorrect(folderPath + "/3.json", expectedFileThreeContents);
+        String expectedFileOneContents = """
+                [ {
+                  "userId" : 1,
+                  "id" : 1,
+                  "title" : "Test Title1",
+                  "body" : "Test Body"
+                }, {
+                  "userId" : 1,
+                  "id" : 2,
+                  "title" : "Test Title2",
+                  "body" : "Test Body"
+                } ]""";
+        String expectedFileTwoContents = """
+                [ {
+                  "userId" : 2,
+                  "id" : 3,
+                  "title" : "Test Title3",
+                  "body" : "Test Body"
+                } ]""";
+        assertPostFileIsCorrect(folderPath + "/user_1.json", expectedFileOneContents);
+        assertPostFileIsCorrect(folderPath + "/user_2.json", expectedFileTwoContents);
     }
 
     @Test
@@ -138,6 +159,9 @@ class FileServiceTest {
     private void assertPostFileIsCorrect(String filePath, String expectedFileContents) {
         File file = new File(filePath);
         assertTrue(file.exists());
+
+        expectedFileContents = expectedFileContents.replaceAll("\\n|\\r\\n", System.getProperty("line.separator"));
+
         assertEquals(expectedFileContents, FileUtils.readFileToString(file, "utf-8"));
     }
 
