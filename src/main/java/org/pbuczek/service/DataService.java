@@ -44,7 +44,8 @@ public class DataService {
     }
 
     public void savePostsToFiles(List<Post> posts, int userId, String folderPath) throws IOException {
-
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(folderPath + "/user_" + userId + ".json"), posts);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(
+                new File(folderPath + "/user_" + userId + ".json"),
+                posts);
     }
 }
